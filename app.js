@@ -1,7 +1,16 @@
 const express = require("express");
+const mongoose = require("mongoose");
 
 const { PORT = 3000 } = process.env;
 const app = express();
+mongoose
+  .connect("mongodb://localhost:27017/aroundb")
+  .then(() => {
+    console.log("Conexão com MongoDB estabelecida com sucesso!");
+  })
+  .catch((err) => {
+    console.error("Erro ao conectar ao MongoDB:", err);
+  });
 
 const mainPage = (req, res, next) => {
   if (req.url === "/") {
