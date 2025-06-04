@@ -22,15 +22,6 @@ async function createUser({ name, about, avatar }) {
   console.log(avatar);
 
   try {
-    //--------------- está errado ---------------
-    // const linkvalidator = /^http?:\/\//;
-    // const isValidAvatar = avatar.match(linkvalidator);
-    // if (!isValidAvatar) {
-    //   throw new Error({
-    //     message: `Avatar Link ${avatar} is invalid`,
-    //     statusCode: 422,
-    //   });
-    // }
     const newUser = await User({ name, about, avatar });
     console.log(newUser);
     const createdUser = await newUser.save();
