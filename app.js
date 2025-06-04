@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const errorHandler = require("./middlewares/errorHandler");
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -22,6 +23,13 @@ const mainPage = (req, res, next) => {
   }
   return next();
 };
+app.use((req, res, next) => {
+  req.user = {
+    _id: "683e6e39ec2eb288b1efeedf",
+  };
+
+  next();
+});
 
 const usersRouter = require("./routes/users");
 const cardsRouter = require("./routes/cards");
@@ -34,6 +42,7 @@ app.use("*splat", (req, res) => {
     .status(404)
     .send({ message: "Desculpe, a solicitação não foi encontrada" });
 });
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening at port ${PORT}`);

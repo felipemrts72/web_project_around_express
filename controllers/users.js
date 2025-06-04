@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const { User } = require("../models/User");
 
 async function getUsers() {
   try {
@@ -19,15 +19,12 @@ async function getUserById(id) {
 }
 
 async function createUser({ name, about, avatar }) {
-  console.log(avatar);
-
   try {
     const newUser = await User({ name, about, avatar });
-    console.log(newUser);
     const createdUser = await newUser.save();
     return createdUser;
   } catch (err) {
-    throw new Error(`ERROR - [CREATE] USER - ${err.message}`);
+    throw new Error(`ERROR - [DBCREATE] USER - ${err.message}`);
   }
 }
 

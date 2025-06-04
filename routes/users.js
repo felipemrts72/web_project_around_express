@@ -6,7 +6,9 @@ router.get("/", async (req, res) => {
     const users = await getUsers();
     return res.json(users);
   } catch (error) {
-    return res.status(404).json({ message: `Error [GET] - ${error.message}` });
+    return res
+      .status(404)
+      .json({ message: `Error [GET-Cards] - ${error.message}` });
   }
 });
 
@@ -27,9 +29,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  console.log(req.body.name);
   const { name, about, avatar } = req.body;
-  console.log(about);
   try {
     const newUser = await createUser({ name, about, avatar });
     return res.status(201).json(newUser);
