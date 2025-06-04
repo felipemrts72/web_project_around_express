@@ -1,38 +1,43 @@
 const router = require("express").Router();
-const fs = require("fs");
-const path = require("path");
+const { getUsers, getUserById, createUser } = require("../controllers/users");
 
-let users = [];
-
-const file = path.join(__dirname, "..", "data", "users.json");
-fs.readFile(file, (error, data) => {
-  if (error) {
-    console.log(error);
-    users = { error: "Setor de usuários em manutenção" };
-    return;
+router.get("/", async (req, res) => {
+  try {
+    const users = await getUsers();
+    return res.json(users);
+  } catch (error) {
+    return res.status(404).json({ message: `Error [GET] - ${error.message}` });
   }
-  users = JSON.parse(data);
 });
 
-router.get("/", (req, res) => {
-  if (users.error) {
-    return res.status(404).json(users);
-  }
-  return res.json(users);
-});
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
-  const user = users.find((us) => us._id === id);
 
-  if (users.error) {
-    return res.status(404).json(users);
-  }
-  if (!user) {
+  try {
+    const user = await getUserById(id);
+    if (!user) {
+      throw new Error("");
+    }
+    return res.json(user);
+  } catch (error) {
     return res
       .status(404)
-      .json({ message: `ID - ${id} -  do usuário não encontrado` });
+      .json({ message: `ID - ${id} -  do usuário não foi encontrado` });
   }
-  return res.json(user);
+});
+
+router.post("/", async (req, res) => {
+  console.log(req.body.name);
+  const { name, about, avatar } = req.body;
+  console.log(about);
+  try {
+    const newUser = await createUser({ name, about, avatar });
+    return res.status(201).json(newUser);
+  } catch (error) {
+    return res
+      .status(404)
+      .json({ message: `[POST] - Não foi possivel criar o usuário` });
+  }
 });
 
 module.exports = router;

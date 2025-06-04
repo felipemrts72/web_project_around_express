@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const urlRegex = /^https?:\/\/(www\.)?[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=]+#?$/;
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -16,7 +18,12 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: true,
+    validate: {
+      validator: (v) => urlRegex.test(v),
+      message: (err) => `${err} não é um link de avatar válido.`,
+    },
   },
 });
 
-module.exports.UserModel = mongoose.model("users", userSchema);
+const User = mongoose.model("users", userSchema);
+module.exports = User;
