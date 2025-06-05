@@ -56,7 +56,7 @@ Middleware personalizado
 
 📦 Instalação | Installation
 
-git clone https://github.com/seuusuario/aroundb.git
+git clone https://github.com/felipemrts72/aroundb.git
 cd aroundb
 npm install
 npm start
