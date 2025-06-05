@@ -37,4 +37,22 @@ async function createUser({ name, about, avatar }) {
   }
 }
 
-module.exports = { getUsers, getUserById, createUser };
+async function userUpdate({ name, about, id }) {
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      { name, about },
+      { new: true, runValidators: true, upsert: false },
+    ).orFail(() => {
+      const err = new Error("Usuário não encontrado");
+      err.name = "NotFound";
+      throw err;
+    });
+    return user;
+  } catch (err) {
+    console.error(`ERROR - [DBUPDT] USER-UPDATE - ${err.message}`);
+    throw err;
+  }
+}
+
+module.exports = { getUsers, getUserById, createUser, userUpdate };
