@@ -1,42 +1,41 @@
 const router = require("express").Router();
 const { getUsers, getUserById, createUser } = require("../controllers/users");
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     const users = await getUsers();
     return res.json(users);
-  } catch (error) {
-    return res
-      .status(404)
-      .json({ message: `Error [GET-Cards] - ${error.message}` });
+  } catch (err) {
+    next(err);
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
     const user = await getUserById(id);
-    if (!user) {
-      throw new Error("");
-    }
     return res.json(user);
-  } catch (error) {
-    return res
-      .status(404)
-      .json({ message: `ID - ${id} -  do usuário não foi encontrado` });
+  } catch (err) {
+    err.message = "Usuário inexistente!";
+    next(err);
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   const { name, about, avatar } = req.body;
+
+  if (!name || !about || !avatar) {
+    const error = new Error("Campos obrigatórios ausentes");
+    error.name = "CastError";
+    return next(error);
+  }
+
   try {
     const newUser = await createUser({ name, about, avatar });
     return res.status(201).json(newUser);
-  } catch (error) {
-    return res
-      .status(404)
-      .json({ message: `[POST] - Não foi possivel criar o usuário` });
+  } catch (err) {
+    next(err);
   }
 });
 

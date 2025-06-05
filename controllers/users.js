@@ -1,20 +1,27 @@
 const { User } = require("../models/User");
 
 async function getUsers() {
-  try {
-    const users = await User.find();
-    return users;
-  } catch (err) {
-    throw new Error(`ERROR - [DBGET] USERS - ${err.message}`);
+  const users = await User.find();
+  if (users.length === 0) {
+    const err = new Error("Nenhum usuário encontrado");
+    err.name = "NotFound";
+    console.error(`ERROR - [DBGET] Users - ${err.message}`);
+    throw err;
   }
+  return users;
 }
 
 async function getUserById(id) {
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(id).orFail(() => {
+      const err = new Error("CastError");
+      err.name = "CastError";
+      throw err;
+    });
     return user;
   } catch (err) {
-    throw new Error(`ERROR - [DBGET] USER-ID - ${err.message}`);
+    console.error(`ERROR - [DBGET] USER-ID - ${err.message}`);
+    throw err;
   }
 }
 
@@ -24,7 +31,9 @@ async function createUser({ name, about, avatar }) {
     const createdUser = await newUser.save();
     return createdUser;
   } catch (err) {
-    throw new Error(`ERROR - [DBCREATE] USER - ${err.message}`);
+    console.error(`ERROR - [DBPOST] CREATE USER - ${err.message}`);
+    err.name = "ValidationError";
+    throw err;
   }
 }
 

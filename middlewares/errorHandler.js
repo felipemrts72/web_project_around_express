@@ -6,15 +6,15 @@ function errorHandler(err, req, res, next) {
   console.error(err);
 
   if (err.name === "ValidationError" || err.name === "CastError") {
-    return res
-      .status(ERROR_CODE_BAD_REQUEST)
-      .send({ message: "Dados inválidos." });
+    return res.status(ERROR_CODE_BAD_REQUEST).send({
+      message: err.message || "Dados inválidos.",
+    });
   }
 
-  if (err.message === "NotFound") {
-    return res
-      .status(ERROR_CODE_NOT_FOUND)
-      .send({ message: "Recurso não encontrado." });
+  if (err.name === "NotFound") {
+    return res.status(ERROR_CODE_NOT_FOUND).send({
+      message: "Recurso não encontrado.",
+    });
   }
 
   res.status(ERROR_CODE_SERVER).send({ message: "Erro interno do servidor." });

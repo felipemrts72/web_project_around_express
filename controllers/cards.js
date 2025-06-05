@@ -1,21 +1,27 @@
 const { Card } = require("../models/Card");
 
 async function getCards() {
-  console.log(Card);
   try {
     const cards = await Card.find();
     return cards;
   } catch (err) {
-    throw new Error(`ERROR - [DBGET] Cards - ${err.message}`);
+    console.error(`ERROR - [DBGET] Cards - ${err.message}`);
+    throw err;
   }
 }
 
 async function deleteCard(id) {
   try {
-    const card = await Card.deleteOne({ _id: id });
-    return card;
+    const deleted = await Card.findByIdAndDelete({ _id: id }).orFail(() => {
+      const err = new Error("Cartão não encontrado");
+      err.name = "NotFound";
+      throw err;
+    });
+
+    return deleted;
   } catch (err) {
-    throw new Error(`ERROR - [DBGET] Card-ID - ${err.message}`);
+    console.error(`ERROR - [DBGET] Card-ID - ${err.message}`);
+    throw err;
   }
 }
 
@@ -25,7 +31,9 @@ async function createCard({ name, link, id }) {
     const createdCard = await newCard.save();
     return createdCard;
   } catch (err) {
-    throw new Error(`ERROR - [DBCREATE] Card - ${err.message}`);
+    console.error(`ERROR - [DBCREATE] Card - ${err.message}`);
+    err.name = "ValidationError";
+    throw err;
   }
 }
 

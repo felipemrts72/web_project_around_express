@@ -13,7 +13,7 @@ const cardSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => urlRegex.test(v),
-      message: (err) => `${err} não é um link de cartões válido.`,
+      message: (link) => `${link.value} não é um link de cartões válido.`,
     },
   },
   owner: {

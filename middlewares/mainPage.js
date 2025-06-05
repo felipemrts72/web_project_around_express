@@ -1,8 +1,10 @@
 const mainPage = (req, res, next) => {
   if (req.url === "/") {
-    return res.status(404).json({
-      message: "A solicitação não foi encontrada, página ainda em produção",
-    });
+    const err = new Error("NotFound");
+    err.name = "NotFound";
+    return next(err);
   }
   return next();
 };
+
+module.exports = mainPage;

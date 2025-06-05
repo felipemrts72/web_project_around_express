@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const mainPage = require("./middlewares/mainPage");
+const userId = require("./middlewares/userId");
 const errorHandler = require("./middlewares/errorHandler");
 
 const { PORT = 3000 } = process.env;
@@ -15,32 +17,17 @@ mongoose
     console.error("Erro ao conectar ao MongoDB:", err);
   });
 
-const mainPage = (req, res, next) => {
-  if (req.url === "/") {
-    return res.status(404).json({
-      message: "A solicitação não foi encontrada, página ainda em produção",
-    });
-  }
-  return next();
-};
-app.use((req, res, next) => {
-  req.user = {
-    _id: "683e6e39ec2eb288b1efeedf",
-  };
-
-  next();
-});
-
 const usersRouter = require("./routes/users");
 const cardsRouter = require("./routes/cards");
 
+app.use(userId);
 app.use("/", mainPage);
 app.use("/users", usersRouter);
 app.use("/cards", cardsRouter);
-app.use("*splat", (req, res) => {
-  res
-    .status(404)
-    .send({ message: "Desculpe, a solicitação não foi encontrada" });
+app.use("*splat", (req, res, next) => {
+  const err = new Error("NotFound");
+  err.name = "NotFound";
+  next(err);
 });
 app.use(errorHandler);
 
