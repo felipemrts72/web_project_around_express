@@ -37,4 +37,65 @@ async function createCard({ name, link, id }) {
   }
 }
 
-module.exports = { getCards, deleteCard, createCard };
+async function likeCard({ userId, cardId }) {
+  try {
+    const card = await Card.findById(cardId).orFail(() => {
+      const err = new Error("Cartão não encontrado");
+      err.name = "NotFound";
+      throw err;
+    });
+
+    if (card.likes.includes(userId)) {
+      const err = new Error("Você já curtiu este cartão");
+      err.name = "BadRequest";
+      throw err;
+    }
+
+    const updatedCard = await Card.findByIdAndUpdate(
+      cardId,
+      { $addToSet: { likes: userId } },
+      { new: true },
+    ).orFail(() => {
+      const err = new Error("Cartão não encontrado");
+      err.name = "NotFound";
+      throw err;
+    });
+
+    return updatedCard;
+  } catch (err) {
+    console.error(`ERROR - [DBUPDT] LIKE-Card - ${err.message}`);
+    throw err;
+  }
+}
+
+async function dislikeCard({ userId, cardId }) {
+  try {
+    const card = await Card.findById(cardId).orFail(() => {
+      const err = new Error("Cartão não encontrado");
+      err.name = "NotFound";
+      throw err;
+    });
+
+    if (!card.likes.includes(userId)) {
+      const err = new Error("Você ainda não curtiu este cartão");
+      err.name = "BadRequest";
+      throw err;
+    }
+
+    const updatedCard = await Card.findByIdAndUpdate(
+      cardId,
+      { $pull: { likes: userId } },
+      { new: true },
+    ).orFail(() => {
+      const err = new Error("Cartão não encontrado");
+      err.name = "NotFound";
+      throw err;
+    });
+    return updatedCard;
+  } catch (err) {
+    console.error(`ERROR - [DBUPDT] DISLIKE-CARD - ${err.message}`);
+    throw err;
+  }
+}
+
+module.exports = { getCards, deleteCard, createCard, likeCard, dislikeCard };

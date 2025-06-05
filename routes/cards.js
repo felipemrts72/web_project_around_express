@@ -1,5 +1,11 @@
 const router = require("express").Router();
-const { getCards, deleteCard, createCard } = require("../controllers/cards");
+const {
+  getCards,
+  deleteCard,
+  createCard,
+  likeCard,
+  dislikeCard,
+} = require("../controllers/cards");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -37,6 +43,30 @@ router.post("/", async (req, res, next) => {
     return res.status(201).json(newCard);
   } catch (error) {
     next(error);
+  }
+});
+
+router.put("/:cardId/likes", async (req, res, next) => {
+  const userId = req.user._id;
+  const { cardId } = req.params;
+
+  try {
+    const card = await likeCard({ userId, cardId });
+    res.status(200).json(card);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/:cardId/likes", async (req, res, next) => {
+  const userId = req.user._id;
+  const { cardId } = req.params;
+
+  try {
+    const card = await dislikeCard({ userId, cardId });
+    res.status(200).json(card);
+  } catch (err) {
+    next(err);
   }
 });
 

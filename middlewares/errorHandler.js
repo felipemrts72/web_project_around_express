@@ -5,7 +5,11 @@ const ERROR_CODE_SERVER = 500;
 function errorHandler(err, req, res, next) {
   console.error(err);
 
-  if (err.name === "ValidationError" || err.name === "CastError") {
+  if (
+    err.name === "ValidationError" ||
+    err.name === "CastError" ||
+    err.name === "BadRequest"
+  ) {
     return res.status(ERROR_CODE_BAD_REQUEST).send({
       message: err.message || "Dados inválidos.",
     });
