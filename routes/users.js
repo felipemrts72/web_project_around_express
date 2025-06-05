@@ -4,6 +4,7 @@ const {
   getUserById,
   createUser,
   userUpdate,
+  userAvatarUpdate,
 } = require("../controllers/users");
 
 router.get("/", async (req, res, next) => {
@@ -44,11 +45,10 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.patch("/:id", async (req, res, next) => {
-  const { id } = req.params;
+router.patch("/me", async (req, res, next) => {
+  const id = req.user._id;
   const { name, about } = req.body;
-
-  console.log("REQ.BODY:", req.body);
+  console.log(id);
 
   if (!name || !about) {
     const error = new Error("Campos obrigatórios ausentes");
@@ -58,6 +58,24 @@ router.patch("/:id", async (req, res, next) => {
 
   try {
     const updateUser = await userUpdate({ name, about, id });
+    return res.status(200).json(updateUser);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch("/me/avatar", async (req, res, next) => {
+  const id = req.user._id;
+  const { avatar } = req.body;
+
+  if (!avatar) {
+    const error = new Error("Campos obrigatórios ausentes");
+    error.name = "CastError";
+    return next(error);
+  }
+
+  try {
+    const updateUser = await userAvatarUpdate({ avatar, id });
     return res.status(200).json(updateUser);
   } catch (err) {
     next(err);
