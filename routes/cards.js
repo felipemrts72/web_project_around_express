@@ -21,7 +21,7 @@ router.delete("/:id", async (req, res, next) => {
   try {
     await deleteCard(id);
     return res
-      .status(204)
+      .status(200)
       .json({ message: `Cartão - ${id} - deletado com sucesso!` });
   } catch (err) {
     next(err);
