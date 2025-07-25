@@ -1,12 +1,14 @@
-AroundB API
+#AroundB API
 
 📌 Descrição | Description
 
-PT-BREste é um projeto de backend desenvolvido com Node.js, Express.js e MongoDB, que simula uma rede social simples. Usuários podem se cadastrar, editar seus perfis, adicionar cartões (posts com links de imagem), curtir ou descurtir cartões, e deletá-los. O projeto utiliza middlewares personalizados para controle de erros e identificação de usuário.
+##PT-BR
+Este é um projeto de backend desenvolvido com Node.js, Express.js e MongoDB, que simula uma rede social simples. Usuários podem se cadastrar, editar seus perfis, adicionar cartões (posts com links de imagem), curtir ou descurtir cartões, e deletá-los. O projeto utiliza middlewares personalizados para controle de erros e identificação de usuário.
 
-ENThis is a backend project built with Node.js, Express.js, and MongoDB that simulates a simple social network. Users can register, edit their profiles, add cards (posts with image links), like or dislike cards, and delete them. The project uses custom middlewares for error handling and user identification.
+##EN
+This is a backend project built with Node.js, Express.js, and MongoDB that simulates a simple social network. Users can register, edit their profiles, add cards (posts with image links), like or dislike cards, and delete them. The project uses custom middlewares for error handling and user identification.
 
-⚙️ Funcionalidades | Features
+##⚙️ Funcionalidades | Features
 
 🧑 Usuários | Users
 
@@ -40,7 +42,7 @@ userId: Simula autenticação com ID de usuário fixo.
 
 errorHandler: Tratamento centralizado de erros com status codes adequados.
 
-🧱 Tecnologias | Technologies
+##🧱 Tecnologias | Technologies
 
 Node.js
 
@@ -54,7 +56,7 @@ Validação com RegEx
 
 Middleware personalizado
 
-📦 Instalação | Installation
+##📦 Instalação | Installation
 
 git clone https://github.com/felipemrts72/aroundb.git
 cd aroundb
@@ -63,7 +65,7 @@ npm start
 
 Certifique-se de ter o MongoDB rodando localmente na porta padrão (mongodb://localhost:27017/aroundb).
 
-📄 Licença | License
+##📄 Licença | License
 
 Este projeto é licenciado sob a Licença MIT.
 
